@@ -48,6 +48,10 @@ jobs:
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
+          if [ -z "$DOCKERHUB_USERNAME" ]; then
+            echo "ERROR: DOCKERHUB_USERNAME secret is empty"
+            exit 1
+          fi
           echo "image=${DOCKERHUB_USERNAME}/cicd-k8s-demo:${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
@@ -83,6 +87,11 @@ jobs:
           envs: IMAGE
           script: |
             set -eu
+
+            if [ -z "$IMAGE" ]; then
+              echo "ERROR: IMAGE is empty"
+              exit 1
+            fi
 
             echo "Deploying image: $IMAGE"
 
